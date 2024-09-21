@@ -1,0 +1,40 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npx webpack
+
+    - name: Combine Data
+      run: npm run combineData --languages chinesesimplified --folders characters
+
+    - name: Upload combined data as artifact
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: combined-data
+        path: output/  # 请根据实际情况调整输出目录
+        retention-days: 7  # 可以设置保留天数
