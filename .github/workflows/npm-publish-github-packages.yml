@@ -24,8 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npx webpack
+      
 
       - name: Combine Data
         run: npm run combineData --languages chinesesimplified --folders characters
